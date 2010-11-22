@@ -58,8 +58,22 @@ public class ServiceExtensionLoader implements ExtensionLoader
    
    private Map<Class<?>, Class<?>> cache = new HashMap<Class<?>, Class<?>>();
    private Map<Class<?>, ExtensionWrapper> extensionMappings = new HashMap<Class<?>, ExtensionWrapper>();
+   private final ClassLoader classLoader;
 
+   //-------------------------------------------------------------------------------------||
+   // Constructors -----------------------------------------------------------------------||
+   //-------------------------------------------------------------------------------------||
    
+   public ServiceExtensionLoader()
+   {
+      this(null);
+   }
+
+   public ServiceExtensionLoader(ClassLoader classLoader)
+   {
+      this.classLoader = classLoader;
+   }
+
    //-------------------------------------------------------------------------------------||
    // Required Implementations - ExtensionLoader -----------------------------------------||
    //-------------------------------------------------------------------------------------||
@@ -318,7 +332,10 @@ public class ServiceExtensionLoader implements ExtensionLoader
    }
    
    private ClassLoader getClassLoader() 
-   {      
-      return SecurityActions.getThreadContextClassLoader();
+   {
+      if (classLoader != null)
+         return classLoader;
+      else
+         return SecurityActions.getThreadContextClassLoader();
    }
 }
